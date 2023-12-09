@@ -13,7 +13,8 @@
         "project": "./tsconfig.json"
     },
     "plugins": [
-        "@typescript-eslint"
+        "@typescript-eslint",
+        "vitest"
     ],
     "rules": {
         // お好みで設定ください
