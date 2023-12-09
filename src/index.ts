@@ -1,38 +1,32 @@
 import { RGB, RGBA } from "./types";
-// import { Decimal } from "decimal.js";
-
-// convert hex(option: include alpha) to rgba object
-export const hexToRgba = (hex: string): RGB | RGBA => {
-  const hexRegex = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})?$/i;
-  const result = hexRegex.exec(hex);
-  if (!result) {
-    throw new Error("invalid hex string");
-  }
-  const [, r, g, b, a] = result;
-  return {
-    r: parseInt(r, 16),
-    g: parseInt(g, 16),
-    b: parseInt(b, 16),
-    ...(a && { a: parseInt(a, 16) }),
-  };
-};
+import { Decimal } from "decimal.js";
 
 // calc contrast of two rgba
 // use Decimal.js to avoid float calculation error
 export const calcContrast = (a: RGB, b: RGB): number => {
   const l1 = calcLuminance(a);
   const l2 = calcLuminance(b);
-  return (Math.max(l1, l2) + 0.05) / (Math.min(l1, l2) + 0.05);
+  const [lMax, lMin] = [l1, l2].sort((a, b) => b - a);
+  return new Decimal(lMax)
+    .add(0.05)
+    .div(new Decimal(lMin).add(0.05))
+    .toNumber();
 };
 
 // use Decimal.js to avoid float calculation error
 export const calcLuminance = ({ r, g, b }: RGB): number => {
   // use Decimal.js to avoid float calculation error
-  const [r1, g1, b1] = [r, g, b].map((v) => {
-    const v1 = v / 255;
-    return v1 <= 0.03928 ? v1 / 12.92 : ((v1 + 0.055) / 1.055) ** 2.4;
-  });
-  return 0.2126 * r1 + 0.7152 * g1 + 0.0722 * b1;
+  const [r1, g1, b1] = [r, g, b].map((v) => new Decimal(v).div(255));
+  const [r2, g2, b2] = [r1, g1, b1].map((v) =>
+    v.lt(0.03928) ? v.div(12.92) : v.add(0.055).div(1.055).pow(2.4)
+  );
+  return new Decimal(0.2126)
+    .mul(r2)
+    .add(0.7152)
+    .mul(g2)
+    .add(0.0722)
+    .mul(b2)
+    .toNumber();
 };
 
 // Composite colors by overlapping the RGBA of the background color with the RGBA of the foreground color and return RGB
