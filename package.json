@@ -1,0 +1,23 @@
+{
+  "name": "calc-contrast",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@typescript-eslint/eslint-plugin": "^6.13.2",
+    "@typescript-eslint/parser": "^6.13.2",
+    "eslint": "^8.55.0",
+    "eslint-config-prettier": "^9.1.0",
+    "prettier": "^3.1.0",
+    "vitest": "^1.0.2"
+  },
+  "dependencies": {
+    "decimal.js": "^10.4.3",
+    "typescript": "^5.3.3"
+  }
+}
