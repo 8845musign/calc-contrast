@@ -17,7 +17,7 @@ export const contrast = (backgroundColor: string, forgroundColor: string) => {
 
 const _contrast = (bgRgb: RGB, forRgb: RGB) => {
   const [lumBg, lumFor] = [luminance(bgRgb), luminance(forRgb)];
-  const [lMax, lMin] = [lumBg, lumFor].sort((a, b) => b - a);
+  const [lMax, lMin] = [lumBg, lumFor].sort((a, b) => b.minus(a).toNumber());
 
   return new Decimal(lMax)
     .plus(0.05)
@@ -25,17 +25,14 @@ const _contrast = (bgRgb: RGB, forRgb: RGB) => {
     .toNumber();
 };
 
-const luminance = (rgb: RGB): number => {
+const luminance = (rgb: RGB): Decimal => {
   const [R, G, B] = [rgb.red, rgb.green, rgb.blue].map((c) => {
     return new Decimal(c).dividedBy(255);
   });
 
   const [R1, G1, B1] = [R, G, B].map(calculateLuminanceForPrimaryColor);
 
-  return R1.times(0.2126)
-    .plus(G1.times(0.7152))
-    .plus(B1.times(0.0722))
-    .toNumber();
+  return R1.times(0.2126).plus(G1.times(0.7152)).plus(B1.times(0.0722));
 };
 
 const calculateLuminanceForPrimaryColor = (color: Decimal): Decimal => {
@@ -54,7 +51,7 @@ if (import.meta.vitest) {
   });
 
   it("Alpha Black and alpha Pink have low contrast.", () => {
-    expect(contrast("#16191f0a", "#da317080")).toBe(2.0986959316314424);
+    expect(contrast("#16191f0a", "#da317080")).toBe(2.098695931631442);
   });
 
   it("Alpha Black and white have high contrast.", () => {
