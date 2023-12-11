@@ -1,9 +1,13 @@
 export type RGB = {
-  r: number;
-  g: number;
-  b: number;
+  red: number;
+  green: number;
+  blue: number;
 };
 
 export type RGBA = RGB & {
-  a: number;
+  alpha: number;
+};
+
+export const isRGBA = (color: RGB | RGBA): color is RGBA => {
+  return "alpha" in color;
 };
