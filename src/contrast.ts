@@ -30,9 +30,9 @@ const luminance = (rgb: RGB): Decimal => {
     return new Decimal(c).dividedBy(255);
   });
 
-  const [R1, G1, B1] = [R, G, B].map(calculateLuminanceForPrimaryColor);
+  const [lumR, lumG, lumB] = [R, G, B].map(calculateLuminanceForPrimaryColor);
 
-  return R1.times(0.2126).plus(G1.times(0.7152)).plus(B1.times(0.0722));
+  return lumR.times(0.2126).plus(lumG.times(0.7152)).plus(lumB.times(0.0722));
 };
 
 const calculateLuminanceForPrimaryColor = (color: Decimal): Decimal => {
