@@ -35,7 +35,7 @@ const blendColor = (
 
   return background
     .times(new Decimal(1).minus(forgroundAlphaDecimal))
-    .plus(forground.times(forgroundAlphaDecimal));
+    .plus(new Decimal(forground).times(forgroundAlphaDecimal));
 };
 
 if (import.meta.vitest) {
